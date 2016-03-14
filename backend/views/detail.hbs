@@ -1,0 +1,199 @@
+<html>
+<head>
+	<title>Test</title>
+	
+	<!-- Bootstrap core CSS -->
+    <link href="/asset/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/asset/datatable/material.min.css">
+	<link rel="stylesheet" href="/asset/datatable/dataTables.material.min.css">
+	<link rel="stylesheet" href="/asset/datatable/select.dataTables.min.css">
+	<link rel="stylesheet" href="/asset/datatable/buttons.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="/asset/css/theme.css">
+
+	<script src="/asset/jquery-2.2.1.min.js"></script>
+	<script src="/asset/datatable/jquery.dataTables.min.js"></script>
+	<script src="/asset/datatable/dataTables.material.min.js"></script>
+	<script src="/asset/datatable/dataTables.select.min.js"></script>
+	<script src="/asset/datatable/dataTables.buttons.min.js"></script>
+	<script src="/asset/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+			var oTable = jQuery("#example").DataTable({
+					select: true,
+					 dom: 'B<"clear">lfrtip',
+					 buttons: [
+				        'copy','pdf'
+				    ],
+					"ajax": '/bugs',
+					"columns": [
+			            { "data": "id" , width :"4%" },
+			            { "data": "desc" , width :"15%" },
+			            { "data": "url" ,width :"8%"},
+			            { "data": "type" ,width :"8%" },
+			            { "data": "fixed",width :"5%" }
+			        ]
+                });
+
+			$('#example tbody').on('click', 'tr', function () {
+		        var data = oTable.row(this).data();
+		        console.log(data);
+		        window.location.href = '/details/' + data.id;
+		    });
+	});
+	</script>
+	<style type="text/css">
+		
+		body{
+			color: #333;
+		}
+
+		.marginT{
+			margin-top : 48px; 
+		}
+
+		.circle {
+		    width: 10px;
+		    height: 10px;
+		    background: red;
+		    border-radius: 20px;
+		    display: inline-block;
+		}
+
+		.metric_title,.metric_value{
+			margin : 0px 16px;
+			display: inline-block;
+		}
+
+		.clear {
+		    clear: both;
+		}
+
+		.stats {
+		    padding: 24px;
+		}
+
+		.metric_value {
+			padding-left: 28px;
+			color : blue;
+		}
+
+		/* container */
+		.content{
+			border-top : 1px solid #efefef;
+			width: 100%;
+		}
+		.content .main{
+			width: 70%;
+		}
+
+		.sect{
+			background: #fff;
+		    border: 1px solid #d6dbe4;
+		    border-radius: 3px;
+		    margin: 20px;
+		    box-shadow: 0 1px 0 rgba(0,0,0,.03);
+		}
+
+		.sect .title{
+			height: 35px;
+			padding: 8px;
+			background: #FBFBFC;
+		}
+
+		.sect .message{
+			padding: 16px;
+		}
+
+		.breadcrumbs{
+			margin: 20px 0;
+		}
+
+		.breadcrumbs a{
+			color : #336699;
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Lambda</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="container marginT">
+	      <div class="row">
+	      		<div class="breadcrumbs">
+	      			<a href="/">Home</a> / <span>Details</span>
+	      		</div>
+	      		<div class="head">
+	      				<div class="pull-left">
+	      					<h5 >{{data.desc}}</h5>
+	      					<div class="sub">
+	      						<div class="circle"></div>
+	      						<span>{{data.url}}</span>	
+	      					</div>
+	      					
+	      				</div>
+	      				
+	      				<div class="stats pull-right">
+	      						<div class="titles">
+	      							<div class="metric_title">EVENTS</div>
+	      							<div class="metric_title">USERS</div>	
+	      						</div>
+	      						<div class="values">
+	      							<div class="metric_value">{{data.count}}</div>
+	      							<div class="metric_value">1</div>	
+	      						</div>
+	      						
+	      				</div>
+	      				<div class="clear"></div>
+	      		</div> 
+	      		<div class="content">
+	      			<div class="main pull-left">
+	      				<div class="sect">
+	      					<div class="title">
+	      						Message
+	      					</div>
+	      					<div class="message">
+	      						{{data.desc}}
+	      					</div>
+	      				</div>
+	      				<div class="sect">
+	      					<div class="title">
+	      						Stack Trace
+	      					</div>
+	      					<div class="message">
+	      						{{{data.stack}}}
+	      						
+	      					</div>
+	      				</div>
+	      				<div class="sect">
+	      					<div class="title">
+	      						Client Details
+	      					</div>
+	      					<div class="message">
+	      						
+	      						
+	      					</div>
+	      				</div>
+	      				<div class="sect">
+	      					<div class="title">
+	      						Others
+	      					</div>
+	      					<div class="message">
+	      						<a target="_blank" href="/extras/29">JSON</a>
+	      					</div>
+	      				</div>
+	      			</div>
+	      			<div class="sidebar pull-right"></div>
+	      			<div class="clear"></div>
+	      		</div> 	
+      	  </div>
+    </div>
+</body>
+</html>

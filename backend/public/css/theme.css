@@ -1,0 +1,14 @@
+
+
+.navbar-inverse{
+	background: #006f72;
+}
+.navbar-inverse .navbar-brand{
+	color : #fff;
+}
+
+
+
+td:hover {
+    cursor: pointer;
+}

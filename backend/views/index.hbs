@@ -1,0 +1,161 @@
+<html>
+<head>
+	<title>Home</title>
+	
+	<!-- Bootstrap core CSS -->
+    <link href="/asset/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/asset/datatable/material.min.css">
+	<link rel="stylesheet" href="/asset/datatable/dataTables.material.min.css">
+	<link rel="stylesheet" href="/asset/datatable/select.dataTables.min.css">
+	<link rel="stylesheet" href="/asset/datatable/buttons.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="/asset/css/theme.css">
+
+	<script src="/asset/jquery-2.2.1.min.js"></script>
+	<script src="/asset/datatable/jquery.dataTables.min.js"></script>
+	<script src="/asset/datatable/dataTables.material.min.js"></script>
+	<script src="/asset/datatable/dataTables.select.min.js"></script>
+	<script src="/asset/datatable/dataTables.buttons.min.js"></script>
+	<script src="/asset/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+	var project_id = '{{ project_id }}';
+
+	jQuery(document).ready(function($) {
+			var oTable = jQuery("#example").DataTable({
+					select: false,
+					 dom: 'B<"clear">lfrtip',
+					 buttons: [
+				        'copy','pdf'
+				    ],
+					"ajax": '/bugs/' + project_id,
+					"columns": [
+			            { "data": "id"  },
+			            { "data": "desc"  },
+			            { "data": "url" },
+			            { "data": "count" },
+			        ],
+			        'order': [[1, 'asc']],
+			        'columnDefs': [{
+				         'targets': 0,
+				         'searchable': false,
+				         'orderable': false,
+				         'className': 'dt-body-center',
+				         'render': function (data, type, full, meta){
+				             return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+				         }
+				      }]
+                });
+
+			$('#example tbody').on('click', 'tr', function () {
+		        var data = oTable.row(this).data();
+		        console.log(data);
+		        window.location.href = '/details/' + data.id;
+		    });
+
+		     // Handle click on "Select all" control
+		   $('#example-select-all').on('click', function(){
+		      // Get all rows with search applied
+		      var rows = table.rows({ 'search': 'applied' }).nodes();
+		      // Check/uncheck checkboxes for all rows in the table
+		      $('input[type="checkbox"]', rows).prop('checked', this.checked);
+		   });
+
+		   // Handle click on checkbox to set state of "Select all" control
+		   $('#example tbody').on('change', 'input[type="checkbox"]', function(){
+		      // If checkbox is not checked
+		      if(!this.checked){
+		         var el = $('#example-select-all').get(0);
+		         // If "Select all" control is checked and has 'indeterminate' property
+		         if(el && el.checked && ('indeterminate' in el)){
+		            // Set visual state of "Select all" control 
+		            // as 'indeterminate'
+		            el.indeterminate = true;
+		         }
+		      }
+		   });
+
+		   // Handle form submission event
+		   $('#frm-example').on('submit', function(e){
+		      var form = this;
+
+		      // Iterate over all checkboxes in the table
+		      table.$('input[type="checkbox"]').each(function(){
+		         // If checkbox doesn't exist in DOM
+		         if(!$.contains(document, this)){
+		            // If checkbox is checked
+		            if(this.checked){
+		               // Create a hidden element 
+		               $(form).append(
+		                  $('<input>')
+		                     .attr('type', 'hidden')
+		                     .attr('name', this.name)
+		                     .val(this.value)
+		               );
+		            }
+		         } 
+		      });
+		   });
+	});
+
+	</script>
+	<style type="text/css">
+		
+		table.dataTable {
+		  border-spacing: 0;
+		  table-layout: fixed;
+		}
+		
+		/*
+		table.dataTable td, table.dataTable th {
+		  text-align: center;
+		  vertical-align: middle;
+		  font-weight: 500;
+		  font-size: 12px;
+		  padding: 0 12px;
+		  height: 48px;
+		  border-left: 1px solid #e5e4e4;
+		  color: #676767;
+		  border-bottom: 1px solid #E5E4E4;
+		}
+		table.dataTable td p, table.dataTable th p {
+		  margin: 0;
+		}
+		table.dataTable th {
+		  border-top: 1px solid #E5E4E4;
+		}
+		table.dataTable tr.title th:first-child {
+		  border-top-left-radius: 8px;
+		}
+	*/
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Lambda</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+    </div>
+    <div class="container">
+	      <div class="row">
+	        	<table id="example" class="mdl-data-table" cellspacing="0" width="100%">
+		        <thead>
+		            <tr>
+		            	<th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+		            	<th>Id</th>
+		                <th>Message</th>
+		                <th>Url</th>	
+		                <th>Count</th>
+		            </tr>
+		        </thead>
+	    </table>
+      </div>
+    </div>
+</body>
+</html>
