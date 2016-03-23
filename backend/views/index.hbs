@@ -14,6 +14,7 @@
 	<script src="/asset/jquery-2.2.1.min.js"></script>
 	<script src="/asset/datatable/jquery.dataTables.min.js"></script>
 	<script src="/asset/datatable/dataTables.material.min.js"></script>
+	
 	<script src="/asset/datatable/dataTables.select.min.js"></script>
 	<script src="/asset/datatable/dataTables.buttons.min.js"></script>
 	<script src="/asset/bootstrap.min.js"></script>
@@ -22,18 +23,19 @@
 	var project_id = '{{ project_id }}';
 
 	jQuery(document).ready(function($) {
-			var oTable = jQuery("#example").DataTable({
-					select: false,
+			var oTable = jQuery("#bugs").DataTable({
+					 
 					 dom: 'B<"clear">lfrtip',
 					 buttons: [
 				        'copy','pdf'
 				    ],
 					"ajax": '/bugs/' + project_id,
 					"columns": [
-			            { "data": "id"  },
-			            { "data": "desc"  },
-			            { "data": "url" },
-			            { "data": "count" },
+						{ "data" : "" , width : "2%"},
+			            { "data": "id" , width : "4%" },
+			            { "data": "desc" , width : "20%" },
+			            { "data": "url", width : "20%" },
+			            { "data": "count",width : "8%" },
 			        ],
 			        'order': [[1, 'asc']],
 			        'columnDefs': [{
@@ -42,30 +44,34 @@
 				         'orderable': false,
 				         'className': 'dt-body-center',
 				         'render': function (data, type, full, meta){
-				             return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+				             return '<input type="checkbox" name="select" value="' + $('<div/>').text(data).html() + '">';
 				         }
 				      }]
                 });
 
-			$('#example tbody').on('click', 'tr', function () {
-		        var data = oTable.row(this).data();
-		        console.log(data);
-		        window.location.href = '/details/' + data.id;
+			
+			$('#bugs tbody').on('click', 'tr', function (ev) {
+				var target = jQuery(ev.target).attr('name');
+				if( target != "select") {
+					var data = oTable.row(this).data();
+			        //console.log(data);
+			        window.location.href = '/details/' + project_id + "/" + data.id;	
+				}
 		    });
-
+			
 		     // Handle click on "Select all" control
-		   $('#example-select-all').on('click', function(){
+		   $('#bugs-select-all').on('click', function(){
 		      // Get all rows with search applied
-		      var rows = table.rows({ 'search': 'applied' }).nodes();
-		      // Check/uncheck checkboxes for all rows in the table
+		      var rows = oTable.rows({ 'search': 'applied' }).nodes();
+		      // Check/uncheck checkboxes for all rows in the oTable
 		      $('input[type="checkbox"]', rows).prop('checked', this.checked);
 		   });
 
 		   // Handle click on checkbox to set state of "Select all" control
-		   $('#example tbody').on('change', 'input[type="checkbox"]', function(){
+		   $('#bugs tbody').on('change', 'input[type="checkbox"]', function(){
 		      // If checkbox is not checked
 		      if(!this.checked){
-		         var el = $('#example-select-all').get(0);
+		         var el = $('#bugs-select-all').get(0);
 		         // If "Select all" control is checked and has 'indeterminate' property
 		         if(el && el.checked && ('indeterminate' in el)){
 		            // Set visual state of "Select all" control 
@@ -76,11 +82,11 @@
 		   });
 
 		   // Handle form submission event
-		   $('#frm-example').on('submit', function(e){
+		   $('#frm-bugs').on('submit', function(e){
 		      var form = this;
 
-		      // Iterate over all checkboxes in the table
-		      table.$('input[type="checkbox"]').each(function(){
+		      // Iterate over all checkboxes in the oTable
+		      oTable.$('input[type="checkbox"]').each(function(){
 		         // If checkbox doesn't exist in DOM
 		         if(!$.contains(document, this)){
 		            // If checkbox is checked
@@ -128,26 +134,37 @@
 		  border-top-left-radius: 8px;
 		}
 	*/
+	.jumbotron{
+		background: #f1f1f1;
+	    color: #333;
+	    margin-top: 50px;
+	    padding: 15px 50px;
+	    width: 100%;
+	    margin: 50px auto;
+	}
 	</style>
 </head>
 <body>
 	<nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">Lambda</a>
+          <a class="navbar-brand" href="#">Extrace</a>
         </div>
       </div>
     </nav>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
+    	Project Id : <span class='value'>{{ project_id }}</span>
+    	<a class="pull-right" href="/dashboard/{{project_id}}" id="bookmarkme">Dashboard URL : Freshdesk</a>
+
     </div>
     <div class="container">
 	      <div class="row">
-	        	<table id="example" class="mdl-data-table" cellspacing="0" width="100%">
+	        	<table id="bugs" class="mdl-data-table" cellspacing="0" width="100%">
 		        <thead>
 		            <tr>
-		            	<th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+		            	<th><input type="checkbox" name="select_all" value="1" id="bugs-select-all"></th>
 		            	<th>Id</th>
 		                <th>Message</th>
 		                <th>Url</th>	

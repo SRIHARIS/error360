@@ -74,8 +74,9 @@ module.exports = function(app,pool){
 		});
 	});
 
-	app.get('/details/:id',function(req,res){
+	app.get('/details/:project_id/:id',function(req,res){
 		var id = req.params.id;
+		var project_id = req.params.project_id;
 		var data = {};
 		var arr = [];
 		arr.push(id);
@@ -111,7 +112,7 @@ module.exports = function(app,pool){
 			  else{
 			    console.log('Error while performing Query.');
 			 }
-				res.render('detail',{ data : data});
+				res.render('detail',{ data : data,project_id : project_id});
 			});
 		  
 		  connection.release();
@@ -134,7 +135,7 @@ module.exports = function(app,pool){
 			  }
 			  else{
 			    console.log('Error while performing Query.');
-			 }
+			  }
 				res.json({localStorage : JSON.parse(data) });
 			});
 		  
